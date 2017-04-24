@@ -23,10 +23,14 @@ repositories {
 
 
 dependencies {
+	compile 'commons-codec:commons-codec:1.10'
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-data-rest')
 	compile('org.flywaydb:flyway-core')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile 'com.h2database:h2'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile "org.postgresql:postgresql:9.4.1212"
+	compile 'org.springframework.boot:spring-boot-starter-freemarker';
+
 }
