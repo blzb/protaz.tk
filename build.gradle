@@ -34,3 +34,11 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-freemarker';
 	compile 'org.ocpsoft.prettytime:prettytime:3.2.7.Final'
 }
+
+task stage {
+	dependsOn build
+}
+
+jar {
+	baseName = 'heroku-gradle-spring-boot'
+}
