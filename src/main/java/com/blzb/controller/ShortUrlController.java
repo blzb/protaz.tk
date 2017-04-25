@@ -2,6 +2,8 @@ package com.blzb.controller;
 
 import com.blzb.data.dbo.ShortUrl;
 import com.blzb.data.repository.ShortUrlRepository;
+import com.blzb.data.vo.ShortUrlVo;
+import com.blzb.data.vo.TotalsVo;
 import com.blzb.service.ShortUrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.mapping.ResourceType;
@@ -14,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by apimentel on 4/23/17.
@@ -29,20 +33,23 @@ public class ShortUrlController {
 
     @ResponseBody
     @RequestMapping(value = "/shortUrls", method = RequestMethod.POST)
-    public ResponseEntity<ResourceSupport> postCollectionResource(
-            @RequestBody ShortUrl shortUrl, PersistentEntityResourceAssembler assembler
+    public ShortUrlVo postCollectionResource(
+            @RequestBody ShortUrl shortUrl, PersistentEntityResourceAssembler assembler, HttpServletRequest request
     )
             throws HttpRequestMethodNotSupportedException {
-        shortUrl = shortUrlService.saveAndCalculate(shortUrl);
-        PersistentEntityResource resource = assembler.toFullResource(shortUrl);
-        HttpHeaders headers = headersPreparer.prepareHeaders(resource);
-        addLocationHeader(headers, assembler, shortUrl);
-        return ControllerUtils.toResponseEntity(HttpStatus.CREATED, headers, resource);
+
+        StringBuilder host = new StringBuilder(request.getScheme()).append("://").append(request.getServerName());
+        if (request.getServerPort() != 80) {
+            host.append(":").append(request.getServerPort());
+        }
+
+        return shortUrlService.saveAndCalculate(shortUrl, host.toString());
     }
 
-    private void addLocationHeader(HttpHeaders headers, PersistentEntityResourceAssembler assembler, Object source) {
-        String selfLink = assembler.getSelfLinkFor(source).getHref();
-        headers.setLocation(new UriTemplate(selfLink).expand());
+    @ResponseBody
+    @RequestMapping(value = "/shortUrls/total", method = RequestMethod.GET)
+    public TotalsVo total(){
+        return shortUrlService.getTotal();
     }
 
 }

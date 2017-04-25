@@ -9,7 +9,7 @@
     <!-- Add Your favicon here -->
     <!--<link rel="icon" href="img/favicon.ico">-->
 
-    <title>INSPINIA - Landing Page</title>
+    <title>protaz.tk</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -27,6 +27,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
 </head>
 <body id="page-top">
 <div class="navbar-wrapper">
@@ -55,23 +56,18 @@
     <div class="container header-back two">
         <div class="row" style="padding-top: 100px;">
             <div class="col-lg-12">
-                <form method="get" class="form-horizontal">
+                <div class="form-horizontal">
                     <div class="form-group">
                         <div class="col-sm-3"></div>
-                        <div class="col-sm-6">
-                            <h1 class="page-title text-center">LET'S SHORTEN THAT LINK</h1>
-                            <br/>
-                            <div class="input-group"><input type="text" class="form-control input-lg"> <span
-                                    class="input-group-btn"> <button type="button" class="btn btn-primary btn-lg"
-                                                                     style="height: 46px; padding-top: 6px; padding-bottom: 6px; padding-left: 30px; padding-right: 30px; font-size: 20px">Go!
-                                        </button> </span></div>
+                        <div class="col-sm-6" id="create">
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-        <div class="row" >
-            <div class="col-lg-12" id="urls">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-lg-6" id="urls">
 
             </div>
         </div>
@@ -129,24 +125,11 @@
 </section>
 
 
-<section id="counter" class="navy-section testimonials" style="margin-top: 0">
+<section id="counter" class="navy-section" style="margin-top: 0">
 
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 text-center wow zoomIn">
-                <i class="fa fa-comment big-icon"></i>
-                <h1>
-                    What our users say
-                </h1>
-                <div class="testimonials-text">
-                    <i>"Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model
-                        text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various
-                        versions have evolved over the years, sometimes by accident, sometimes on purpose (injected
-                        humour and the like)."</i>
-                </div>
-                <small>
-                    <strong>12.02.2014 - Andy Smith</strong>
-                </small>
+            <div class="col-lg-12 text-center" id="counterDiv">
             </div>
         </div>
     </div>
@@ -186,28 +169,70 @@
 <script src="js/pace.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/classie.js"></script>
+
 <script id="main" type="text/ractive">
     {{#items.length}}
-				<section id="main">
+				<div class="wrapper wrapper-content">
 					<!-- Here, we compare the total number of tasks (`items.length`) with the number of completed tasks (`completedTasks().length`). This calculation happens reactively, so we never need to manually trigger an update. When the `change` event fires on the input, the `toggleAll` event fires on the Ractive instance. -->
-					<ul id="todo-list">
 						{{#items:i}}
 							<!-- The {{>item}} partial is defined in the script tag below -->
 							{{>item}}
 						{{/items}}
-					</ul>
-				</section>
+				</div>
 	{{/items.length}}
+
 
 </script>
 
+
 <script id="item" type="text/ractive">
-			<!-- This is the {{>item}} partial. It is rendered for each task in the array (`this` corresponds to the current task). But we only want to actually show those tasks that pass the current filter. -->
-				<li>
-					<div class="view">
-						<label on-dblclick="edit">{{shortUrl}}</label>
-					</div>
-				</li>
+<div class="vote-item  animated fadeInRight">
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="vote-actions">
+
+                <div style="padding-top: 10px;">{{visits}}
+                </div>
+                <a href="#">
+                    <i class="fa fa-area-chart" style="font-size: 30px;"> </i>
+                </a>
+            </div>
+            <a href="{{shortUrl}}" target="_blank" class="vote-title">
+                {{shortUrl}}
+            </a>
+            <a href="{{originalUrl}}" target="_blank" class="vote-subtitle">
+                {{originalUrl}}
+            </a>
+            <div class="vote-info">
+                <i class="fa fa-clock-o"></i> <a href="#">{{createdAt}}</a>
+                <i class="fa fa-user"></i> <a href="#">{{createdBy}}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</script>
+<script id="form" type="text/ractive">
+
+<h1 class="page-title text-center">LET'S SHORTEN THAT LINK</h1>
+<br/>
+<div class="input-group"><input placeholder="Type your url..." autofocus type="text" class="form-control input-lg"> <span
+        class="input-group-btn"> <button on-click='newUrl' type="button" class="btn btn-primary btn-lg"
+                                         style="height: 46px; padding-top: 6px; padding-bottom: 6px; padding-left: 30px; padding-right: 30px; font-size: 20px">Go!
+                                        </button>
+                                        </span>
+</div>
+
+</script>
+<script id="counters" type="text/ractive">
+<i class="fa fa-bar-chart big-icon"></i>
+                <h3>
+                    Links shortened
+                </h3>
+<h1>{{counters.totalLinks}}</h1>
 </script>
 <script src="js/inspinia.js"></script>
 </body>

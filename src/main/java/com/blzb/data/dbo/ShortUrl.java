@@ -1,22 +1,31 @@
 package com.blzb.data.dbo;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by apimentel on 4/23/17.
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class ShortUrl {
     @Id
-    @SequenceGenerator(name="short_url_id_seq",
-            sequenceName="short_url_id_seq",
-            allocationSize=1)
+    @SequenceGenerator(name = "short_url_id_seq",
+            sequenceName = "short_url_id_seq",
+            allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator="short_url_id_seq")
+            generator = "short_url_id_seq")
     private Integer id;
     private String url;
     private String hashKey;
     private String stringId;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(updatable = false)
+    private Date createdAt;
 
     public Integer getId() {
         return id;
@@ -48,5 +57,18 @@ public class ShortUrl {
 
     public void setStringId(String stringId) {
         this.stringId = stringId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
     }
 }

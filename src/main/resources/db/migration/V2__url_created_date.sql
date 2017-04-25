@@ -1,0 +1,1 @@
+ALTER TABLE short_url ADD COLUMN created_at timestamp DEFAULT now();
