@@ -35,10 +35,15 @@ dependencies {
 	compile 'org.ocpsoft.prettytime:prettytime:3.2.7.Final'
 }
 
-task stage {
-	dependsOn build
+task stage(type: Copy, dependsOn: [clean, build]) {
+	from jar.archivePath
+	into project.rootDir
+	rename {
+		'app.jar'
+	}
 }
+stage.mustRunAfter(clean)
 
-jar {
-	baseName = 'heroku-gradle-spring-boot'
+clean << {
+	project.file('app.jar').delete()
 }
