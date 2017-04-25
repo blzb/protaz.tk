@@ -39,7 +39,7 @@ public class ShortUrlController {
             throws HttpRequestMethodNotSupportedException {
 
         StringBuilder host = new StringBuilder(request.getScheme()).append("://").append(request.getServerName());
-        if (request.getServerPort() != 80) {
+        if (request.getServerPort() != 80 && request.getServerPort() != 443) {
             host.append(":").append(request.getServerPort());
         }
 
