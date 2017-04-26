@@ -68,7 +68,7 @@ $(document).ready(function () {
             var pageNumber = parseInt(counter.get('page').number);
             if (pageNumber > 0) {
                 $.ajax({
-                    url: "/api/shortUrls?size=5&page=" + (pageNumber-1),
+                    url: "/api/shortUrls?size=5&page=" + (pageNumber - 1),
                     type: "GET",
                     dataType: "json"
                 })
@@ -77,11 +77,11 @@ $(document).ready(function () {
                     });
             }
         },
-        nextPage : function (event) {
+        nextPage: function (event) {
             var pageNumber = parseInt(counter.get('page').number);
-            if (pageNumber < (parseInt(counter.get('page').totalPages)-1)) {
+            if (pageNumber < (parseInt(counter.get('page').totalPages) - 1)) {
                 $.ajax({
-                    url: "/api/shortUrls?size=5&page=" + (pageNumber+1),
+                    url: "/api/shortUrls?size=5&page=" + (pageNumber + 1),
                     type: "GET",
                     dataType: "json"
                 })
@@ -111,6 +111,7 @@ $(document).ready(function () {
 
         data: {
             customUrl: false,
+            idUnavailable: false,
             item: []
         }
     });
@@ -118,9 +119,10 @@ $(document).ready(function () {
     createUrl.on({
         newUrl: function (event) {
             createUrl.set('invalidUrl', false);
+            createUrl.set('idUnavailable', false);
             var node = this.el.querySelector(".input-lg");
-            var nodeCustom =this.el.querySelector("#customId");
-            var customId =nodeCustom.value.trim();
+            var nodeCustom = this.el.querySelector("#customId");
+            var customId = nodeCustom.value.trim();
 
             var urlValue = node.value.trim();
             if (!!urlValue) {
@@ -128,7 +130,7 @@ $(document).ready(function () {
                 var re = new RegExp(urlRegex);
                 if (re.test(urlValue)) {
                     var body = {url: urlValue};
-                    if(!!customId){
+                    if (!!customId) {
                         body.customStringId = customId;
                     }
                     $.ajax({
@@ -140,7 +142,11 @@ $(document).ready(function () {
                     })
                         .done(function (data) {
                             urlList.unshift('items', data);
-                        });
+                        })
+                        .error(function (data) {
+                            console.log(data);
+                            createUrl.set('idUnavailable', true);
+                    });
                     node.value = '';
                     nodeCustom.value = '';
                 } else {
@@ -152,7 +158,7 @@ $(document).ready(function () {
         },
         setCustom: function (event) {
             console.log(event.node);
-            console.log($(event.node).getAttribute( "checked" ));
+            console.log($(event.node).getAttribute("checked"));
 
         }
     });

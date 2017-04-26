@@ -221,6 +221,12 @@
   <strong>Warning!</strong> That url is not valid
 </div>
 {{/if}}
+{{#if idUnavailable}}
+<div class="alert alert-warning alert-dismissible" role="error">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  We tried our best to accomodate your url, but it was already taken
+</div>
+{{/if}}
 <div class="input-group">
 <input placeholder="Type your url..." autofocus type="text" class="form-control input-lg">
 <span class="input-group-btn">

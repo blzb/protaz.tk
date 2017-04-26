@@ -6,6 +6,7 @@ import com.blzb.data.repository.UrlHitRepository;
 import com.blzb.data.vo.CustomerShortUrlVo;
 import com.blzb.data.vo.ShortUrlVo;
 import com.blzb.data.vo.TotalsVo;
+import com.blzb.service.IdTakenException;
 import com.blzb.service.ShortUrlService;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by apimentel on 4/23/17.
@@ -27,14 +29,17 @@ public class ShortUrlServiceImpl implements ShortUrlService {
 
     @Autowired
     private UrlHitRepository urlHitRepository;
+    private static final int MAX_APPENDS = 6;
+
+    Random random = new Random();
 
     @Override
     public ShortUrlVo saveAndCalculate(CustomerShortUrlVo customerShortUrlVo, String hostname) {
         ShortUrl shortUrl = getEntity(customerShortUrlVo);
         ShortUrlVo shortUrlVo;
-        if(shortUrl.isCustom()){
+        if (shortUrl.isCustom()) {
             shortUrlVo = saveCustomUrl(hostname, shortUrl);
-        } else{
+        } else {
             shortUrlVo = generateShortUrl(hostname, shortUrl);
         }
         return shortUrlVo;
@@ -42,10 +47,10 @@ public class ShortUrlServiceImpl implements ShortUrlService {
 
     private ShortUrlVo saveCustomUrl(String hostname, ShortUrl shortUrl) {
         ShortUrl existing = shortUrlRepository.findByStringId(shortUrl.getStringId());
-        if(null == existing){
+        if (null == existing) {
             return getShortUrlVo(hostname, shortUrlRepository.save(shortUrl));
         } else {
-            return null;
+            throw new IdTakenException();
         }
     }
 
@@ -56,10 +61,36 @@ public class ShortUrlServiceImpl implements ShortUrlService {
             shortUrl.setHashKey(md5Url);
             shortUrl = shortUrlRepository.save(shortUrl);
             shortUrl.setStringId(Long.toString(Integer.MAX_VALUE - shortUrl.getId(), Character.MAX_RADIX));
-            shortUrl = shortUrlRepository.save(shortUrl);
+            boolean assignedId= retryIdGeneration(shortUrl);
+            if (!assignedId) {
+                shortUrl.setStringId(shortUrl.getHashKey());
+                retryIdGeneration(shortUrl);
+            }
+            if(assignedId){
+                shortUrl = shortUrlRepository.save(shortUrl);
+            } else{
+                throw new IdTakenException();
+            }
+
             existing = shortUrl;
         }
         return getShortUrlVo(hostname, existing);
+    }
+
+    private boolean retryIdGeneration(ShortUrl shortUrl) {
+        int counter;
+        boolean assignedId = true;
+        counter = 0;
+        while (shortUrlRepository.findByStringId(shortUrl.getStringId()) != null) {
+            char c = (char) (random.nextInt(26) + 'a');
+            shortUrl.setStringId(shortUrl.getStringId() + c);
+            counter++;
+            if(counter > MAX_APPENDS){
+                assignedId = false;
+                break;
+            }
+        }
+        return assignedId;
     }
 
     @Override
@@ -87,7 +118,7 @@ public class ShortUrlServiceImpl implements ShortUrlService {
         if (!(url.startsWith("http://") || url.startsWith("https://"))) {
             shortUrl.setUrl("http://" + url);
         }
-        if(null != customerShortUrlVo.getCustomStringId()){
+        if (null != customerShortUrlVo.getCustomStringId()) {
             shortUrl.setStringId(customerShortUrlVo.getCustomStringId());
             shortUrl.setCustom(true);
         } else {
