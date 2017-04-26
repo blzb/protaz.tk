@@ -1,0 +1,1 @@
+ALTER TABLE short_url DROP CONSTRAINT uk_rf7lm9yiteal0u3bm8bnk8i23;

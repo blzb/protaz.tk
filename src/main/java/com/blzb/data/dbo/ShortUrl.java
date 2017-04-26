@@ -22,6 +22,7 @@ public class ShortUrl {
     private String url;
     private String hashKey;
     private String stringId;
+    private boolean custom;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
@@ -70,5 +71,13 @@ public class ShortUrl {
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
+    }
+
+    public boolean isCustom() {
+        return custom;
+    }
+
+    public void setCustom(boolean custom) {
+        this.custom = custom;
     }
 }

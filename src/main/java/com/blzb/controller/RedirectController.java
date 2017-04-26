@@ -25,12 +25,8 @@ public class RedirectController {
 
     @RequestMapping(value = "{shortId}")
     public String redirect(@PathVariable String shortId, HttpServletRequest servletRequest) {
-        ShortUrl shortUrl;
-        if (shortId.length() > 6) {
-            shortUrl = shortUrlRepository.findByHashKey(shortId);
-        } else {
-            shortUrl = shortUrlRepository.findByStringId(shortId);
-        }
+        ShortUrl shortUrl = shortUrlRepository.findByStringId(shortId);
+
         if (shortUrl != null) {
             UrlHit urlHit = new UrlHit();
             urlHit.setShortUrlId(shortUrl.getId());
