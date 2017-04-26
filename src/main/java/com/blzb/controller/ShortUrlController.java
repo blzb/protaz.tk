@@ -2,6 +2,7 @@ package com.blzb.controller;
 
 import com.blzb.data.dbo.ShortUrl;
 import com.blzb.data.repository.ShortUrlRepository;
+import com.blzb.data.vo.CustomerShortUrlVo;
 import com.blzb.data.vo.ShortUrlVo;
 import com.blzb.data.vo.TotalsVo;
 import com.blzb.service.ShortUrlService;
@@ -36,7 +37,7 @@ public class ShortUrlController {
     @ResponseBody
     @RequestMapping(value = "/shortUrls", method = RequestMethod.POST)
     public ShortUrlVo postCollectionResource(
-            @RequestBody ShortUrl shortUrl, PersistentEntityResourceAssembler assembler, HttpServletRequest request
+            @RequestBody CustomerShortUrlVo shortUrl, PersistentEntityResourceAssembler assembler, HttpServletRequest request
     )
             throws HttpRequestMethodNotSupportedException {
 

@@ -221,11 +221,16 @@
   <strong>Warning!</strong> That url is not valid
 </div>
 {{/if}}
-<div class="input-group"><input placeholder="Type your url..." autofocus type="text" class="form-control input-lg"> <span
-        class="input-group-btn"> <button on-click='newUrl' type="button" class="btn btn-primary btn-lg"
-                                         style="height: 46px; padding-top: 6px; padding-bottom: 6px; padding-left: 30px; padding-right: 30px; font-size: 20px">Go!
+<div class="input-group">
+<input placeholder="Type your url..." autofocus type="text" class="form-control input-lg">
+<span class="input-group-btn">
+<button on-click='newUrl' type="button" class="btn btn-primary btn-lg" style="height: 46px; padding-top: 6px; padding-bottom: 6px; padding-left: 30px; padding-right: 30px; font-size: 20px">Go!
                                         </button>
                                         </span>
+</div>
+<br/>
+<div class="input-group m-b">
+<span class="input-group-addon"> </span> <input id="customId" type="text" class="form-control" placeholder="Type your desired id...">
 </div>
 
 

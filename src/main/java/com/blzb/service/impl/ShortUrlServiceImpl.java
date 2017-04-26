@@ -3,6 +3,7 @@ package com.blzb.service.impl;
 import com.blzb.data.dbo.ShortUrl;
 import com.blzb.data.repository.ShortUrlRepository;
 import com.blzb.data.repository.UrlHitRepository;
+import com.blzb.data.vo.CustomerShortUrlVo;
 import com.blzb.data.vo.ShortUrlVo;
 import com.blzb.data.vo.TotalsVo;
 import com.blzb.service.ShortUrlService;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by apimentel on 4/23/17.
@@ -29,8 +29,27 @@ public class ShortUrlServiceImpl implements ShortUrlService {
     private UrlHitRepository urlHitRepository;
 
     @Override
-    public ShortUrlVo saveAndCalculate(ShortUrl shortUrl, String hostname) {
-        cleanUrl(shortUrl);
+    public ShortUrlVo saveAndCalculate(CustomerShortUrlVo customerShortUrlVo, String hostname) {
+        ShortUrl shortUrl = getEntity(customerShortUrlVo);
+        ShortUrlVo shortUrlVo;
+        if(shortUrl.isCustom()){
+            shortUrlVo = saveCustomUrl(hostname, shortUrl);
+        } else{
+            shortUrlVo = generateShortUrl(hostname, shortUrl);
+        }
+        return shortUrlVo;
+    }
+
+    private ShortUrlVo saveCustomUrl(String hostname, ShortUrl shortUrl) {
+        ShortUrl existing = shortUrlRepository.findByStringId(shortUrl.getStringId());
+        if(null == existing){
+            return getShortUrlVo(hostname, shortUrlRepository.save(shortUrl));
+        } else {
+            return null;
+        }
+    }
+
+    private ShortUrlVo generateShortUrl(String hostname, ShortUrl shortUrl) {
         String md5Url = DigestUtils.md5Hex(shortUrl.getUrl());
         ShortUrl existing = shortUrlRepository.findByHashKey(md5Url);
         if (existing == null) {
@@ -40,8 +59,7 @@ public class ShortUrlServiceImpl implements ShortUrlService {
             shortUrl = shortUrlRepository.save(shortUrl);
             existing = shortUrl;
         }
-        ShortUrlVo shortUrlVo = getShortUrlVo(hostname, existing);
-        return shortUrlVo;
+        return getShortUrlVo(hostname, existing);
     }
 
     @Override
@@ -62,11 +80,20 @@ public class ShortUrlServiceImpl implements ShortUrlService {
         return shortUrlVo;
     }
 
-    private void cleanUrl(ShortUrl shortUrl) {
+    private ShortUrl getEntity(CustomerShortUrlVo customerShortUrlVo) {
+        ShortUrl shortUrl = new ShortUrl();
+        shortUrl.setUrl(customerShortUrlVo.getUrl());
         String url = shortUrl.getUrl();
         if (!(url.startsWith("http://") || url.startsWith("https://"))) {
             shortUrl.setUrl("http://" + url);
         }
+        if(null != customerShortUrlVo.getCustomStringId()){
+            shortUrl.setStringId(customerShortUrlVo.getCustomStringId());
+            shortUrl.setCustom(true);
+        } else {
+            shortUrl.setCustom(false);
+        }
+        return shortUrl;
     }
 
     @Override
