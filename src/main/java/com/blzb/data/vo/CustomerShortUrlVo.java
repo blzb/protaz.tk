@@ -7,6 +7,19 @@ public class CustomerShortUrlVo {
     private String customStringId;
     private String url;
 
+    public CustomerShortUrlVo(String customStringId, String url) {
+        this.customStringId = customStringId;
+        this.url = url;
+    }
+
+    public CustomerShortUrlVo(String url) {
+        this.url = url;
+    }
+
+    public CustomerShortUrlVo() {
+
+    }
+
     public String getCustomStringId() {
         return customStringId;
     }
