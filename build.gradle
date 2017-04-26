@@ -33,4 +33,6 @@ dependencies {
 	compile "org.postgresql:postgresql:9.4.1212"
 	compile 'org.springframework.boot:spring-boot-starter-freemarker';
 	compile 'org.ocpsoft.prettytime:prettytime:3.2.7.Final'
+	compile group: 'commons-validator', name: 'commons-validator', version: '1.4.0'
+
 }

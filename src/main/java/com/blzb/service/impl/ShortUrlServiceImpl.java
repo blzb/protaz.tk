@@ -8,6 +8,8 @@ import com.blzb.data.vo.ShortUrlVo;
 import com.blzb.data.vo.TotalsVo;
 import com.blzb.service.IdTakenException;
 import com.blzb.service.ShortUrlService;
+import com.blzb.service.UnacceptableUrlException;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,10 +34,14 @@ public class ShortUrlServiceImpl implements ShortUrlService {
     private static final int MAX_APPENDS = 6;
 
     Random random = new Random();
-
+    String[] schemes = {"http","https"};
+    UrlValidator urlValidator = new UrlValidator(schemes);
     @Override
     public ShortUrlVo saveAndCalculate(CustomerShortUrlVo customerShortUrlVo, String hostname) {
         ShortUrl shortUrl = getEntity(customerShortUrlVo);
+        if(!urlValidator.isValid(shortUrl.getUrl())){
+            throw new UnacceptableUrlException();
+        }
         ShortUrlVo shortUrlVo;
         if (shortUrl.isCustom()) {
             shortUrlVo = saveCustomUrl(hostname, shortUrl);
