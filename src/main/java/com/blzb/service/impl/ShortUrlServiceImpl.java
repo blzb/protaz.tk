@@ -10,10 +10,12 @@ import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by apimentel on 4/23/17.
@@ -38,21 +40,32 @@ public class ShortUrlServiceImpl implements ShortUrlService {
             shortUrl = shortUrlRepository.save(shortUrl);
             existing = shortUrl;
         }
+        ShortUrlVo shortUrlVo = getShortUrlVo(hostname, existing);
+        return shortUrlVo;
+    }
+
+    @Override
+    public Page<ShortUrlVo> listAllByPage(Pageable pageable, String hostName) {
+        Page<ShortUrl> results = shortUrlRepository.findAll(pageable);
+        return results.map(source -> getShortUrlVo(hostName, source));
+    }
+
+    private ShortUrlVo getShortUrlVo(String hostname, ShortUrl shortUrl) {
         ShortUrlVo shortUrlVo = new ShortUrlVo();
-        shortUrlVo.setOriginalUrl(existing.getUrl());
-        shortUrlVo.setShortUrl(hostname + "/" + existing.getStringId());
-        shortUrlVo.setLargerUrl(hostname + "/" + existing.getHashKey());
+        shortUrlVo.setOriginalUrl(shortUrl.getUrl());
+        shortUrlVo.setShortUrl(hostname + "/" + shortUrl.getStringId());
+        shortUrlVo.setLargerUrl(hostname + "/" + shortUrl.getHashKey());
         shortUrlVo.setPageName("Name");
-        shortUrlVo.setVisits(urlHitRepository.countByShortUrlId(existing.getId()));
+        shortUrlVo.setVisits(urlHitRepository.countByShortUrlId(shortUrl.getId()));
         PrettyTime prettyTime = new PrettyTime();
-        shortUrlVo.setCreatedAt(prettyTime.format(existing.getCreatedAt()));
+        shortUrlVo.setCreatedAt(prettyTime.format(shortUrl.getCreatedAt()));
         return shortUrlVo;
     }
 
     private void cleanUrl(ShortUrl shortUrl) {
         String url = shortUrl.getUrl();
-        if(!(url.startsWith("http://") || url.startsWith("https://"))){
-            shortUrl.setUrl("http://"+url);
+        if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+            shortUrl.setUrl("http://" + url);
         }
     }
 

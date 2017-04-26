@@ -40,7 +40,6 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                    <a class="navbar-brand" href="index.html">WEBAPPLAYERS</a>
                 </button>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
@@ -56,25 +55,22 @@
 <section style="margin-top: 66px;">
     <div class="container header-back two">
         <div class="row" style="padding-top: 25px;">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-4">
+            <div class="col-sm-4 col-sm-offset-4">
                 <img src="/img/logo_white.png" style="height: 200px;"/>
             </div>
         </div>
-        <div class="row" >
+        <div class="row">
             <div class="col-lg-12">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-6" id="create">
+                        <div class="col-sm-6 col-sm-offset-3" id="create">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-3"></div>
-            <div class="col-lg-6" id="urls">
+            <div class="col-lg-6 col-lg-offset-3" id="urls">
 
             </div>
         </div>
@@ -94,7 +90,8 @@
             <div class="col-lg-5 col-lg-offset-1 features-text">
                 <h2>A lot of links</h2>
                 <i class="fa fa-bar-chart big-icon pull-right"></i>
-                <p>Make those huge urls into small ones with our awesome shortening algorithm, we support up to 2,147,483,647</p>
+                <p>Make those huge urls into small ones with our awesome shortening algorithm, we support up to
+                    2,147,483,647</p>
             </div>
             <div class="col-lg-5 features-text">
                 <h2>Blazing fast </h2>
@@ -119,11 +116,11 @@
 </section>
 
 
-<section id="counter" class="navy-section">
+<section id="counter" class="gray-section">
 
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 text-center" id="counterDiv">
+            <div class="col-lg-6 col-sm-offset-3 text-center" id="counterDiv">
             </div>
         </div>
     </div>
@@ -174,6 +171,7 @@
 	{{/items.length}}
 
 
+
 </script>
 
 
@@ -198,7 +196,6 @@
             </a>
             <div class="vote-info">
                 <i class="fa fa-clock-o"></i> <a href="#">{{createdAt}}</a>
-                <i class="fa fa-user"></i> <a href="#">{{createdBy}}</a>
             </div>
         </div>
         <div class="col-md-2">
@@ -206,6 +203,7 @@
         </div>
     </div>
 </div>
+
 
 
 
@@ -227,14 +225,31 @@
                                         </span>
 </div>
 
+
 </script>
 <script id="counters" type="text/ractive">
-<i class="fa fa-bar-chart big-icon"></i>
                 <h3>
                     Links shortened
                 </h3>
 <h1>{{counters.totalLinks}}</h1>
+
+{{#if (page.content.length>0)}}
+				<div class="wrapper wrapper-content">
+					<!-- Here, we compare the total number of tasks (`items.length`) with the number of completed tasks (`completedTasks().length`). This calculation happens reactively, so we never need to manually trigger an update. When the `change` event fires on the input, the `toggleAll` event fires on the Ractive instance. -->
+						{{#page.content:i}}
+							<!-- The {{>item}} partial is defined in the script tag below -->
+							{{>item}}
+						{{/page.content}}
+				</div>
+				<div class="btn-group">
+				    <button class="btn btn-primary" on-click='prevPage'>Prev</button><button class="btn btn-primary" on-click='nextPage'>Next</button>
+                </div>
+
+{{else}}
+    <button class="btn btn-primary" on-click='loadUrls'>Show urls</button>
+{{/if}}
+
 </script>
-<script src="js/inspinia.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
