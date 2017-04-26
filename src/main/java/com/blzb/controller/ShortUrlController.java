@@ -6,6 +6,8 @@ import com.blzb.data.vo.ShortUrlVo;
 import com.blzb.data.vo.TotalsVo;
 import com.blzb.service.ShortUrlService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.core.mapping.ResourceType;
 import org.springframework.data.rest.webmvc.*;
 import org.springframework.hateoas.ResourceSupport;
@@ -38,18 +40,28 @@ public class ShortUrlController {
     )
             throws HttpRequestMethodNotSupportedException {
 
+
+        return shortUrlService.saveAndCalculate(shortUrl, getHost(request));
+    }
+
+    private String getHost(HttpServletRequest request) {
         StringBuilder host = new StringBuilder(request.getScheme()).append("://").append(request.getServerName());
         if (request.getServerPort() != 80 && request.getServerPort() != 443) {
             host.append(":").append(request.getServerPort());
         }
-
-        return shortUrlService.saveAndCalculate(shortUrl, host.toString());
+        return host.toString();
     }
 
     @ResponseBody
     @RequestMapping(value = "/shortUrls/total", method = RequestMethod.GET)
-    public TotalsVo total(){
+    public TotalsVo total() {
         return shortUrlService.getTotal();
     }
 
+
+    @RequestMapping(value = "/shortUrls", method = RequestMethod.GET)
+    @ResponseBody
+    Page<ShortUrlVo> list(Pageable pageable, HttpServletRequest request) {
+        return shortUrlService.listAllByPage(pageable, getHost(request));
+    }
 }

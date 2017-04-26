@@ -42,13 +42,56 @@ $(document).ready(function () {
         template: '#counters',
 
         data: {
-            counters:{
+            page: {
+                number: 0
+            },
+            counters: {
                 "totalLinks": 0,
                 "totalHits": null
             }
         }
     });
     setInterval(totalUpdate, 1000); //300000 MS == 5 minutes
+
+    counter.on({
+        loadUrls: function (event) {
+            $.ajax({
+                url: "/api/shortUrls?size=5&" + counter.get("page.number"),
+                type: "GET",
+                dataType: "json"
+            })
+                .done(function (data) {
+                    counter.set('page', data);
+                });
+        },
+        prevPage: function (event) {
+            var pageNumber = parseInt(counter.get('page').number);
+            if (pageNumber > 0) {
+                $.ajax({
+                    url: "/api/shortUrls?size=5&page=" + (pageNumber-1),
+                    type: "GET",
+                    dataType: "json"
+                })
+                    .done(function (data) {
+                        counter.set('page', data);
+                    });
+            }
+        },
+        nextPage : function (event) {
+            var pageNumber = parseInt(counter.get('page').number);
+            if (pageNumber < (parseInt(counter.get('page').totalPages)-1)) {
+                $.ajax({
+                    url: "/api/shortUrls?size=5&page=" + (pageNumber+1),
+                    type: "GET",
+                    dataType: "json"
+                })
+                    .done(function (data) {
+                        counter.set('page', data);
+                    });
+            }
+
+        }
+    });
 
     function totalUpdate() {
         $.ajax({
@@ -76,10 +119,10 @@ $(document).ready(function () {
             createUrl.set('invalidUrl', false);
             var node = this.el.querySelector(".input-lg");
             var urlValue = node.value.trim();
-            if(!!urlValue) {
+            if (!!urlValue) {
                 var urlRegex = '^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$';
-                var re=new RegExp(urlRegex);
-                if(re.test(urlValue)) {
+                var re = new RegExp(urlRegex);
+                if (re.test(urlValue)) {
                     $.ajax({
                         url: "/api/shortUrls",
                         type: "POST",
@@ -91,10 +134,10 @@ $(document).ready(function () {
                             urlList.unshift('items', data);
                         });
                     node.value = '';
-                } else{
+                } else {
                     createUrl.set('invalidUrl', true);
                 }
-            } else{
+            } else {
                 createUrl.set('invalidUrl', true);
             }
         }
