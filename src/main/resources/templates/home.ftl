@@ -40,6 +40,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
+                    <a class="navbar-brand" href="index.html">WEBAPPLAYERS</a>
                 </button>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
@@ -54,7 +55,13 @@
 </div>
 <section style="margin-top: 66px;">
     <div class="container header-back two">
-        <div class="row" style="padding-top: 100px;">
+        <div class="row" style="padding-top: 25px;">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <img src="/img/logo_white.png" style="height: 200px;"/>
+            </div>
+        </div>
+        <div class="row" >
             <div class="col-lg-12">
                 <div class="form-horizontal">
                     <div class="form-group">
@@ -75,49 +82,36 @@
 </section>
 
 
-<section class="features">
+<section id="features" class="features">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="navy-line"></div>
                 <h1>More and more extra great feautres</h1>
-                <p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. </p>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-5 col-lg-offset-1 features-text">
-                <small>INSPINIA</small>
-                <h2>Perfectly designed </h2>
+                <h2>A lot of links</h2>
                 <i class="fa fa-bar-chart big-icon pull-right"></i>
-                <p>INSPINIA Admin Theme is a premium admin dashboard template with flat design concept. It is fully
-                    responsive admin dashboard template built with Bootstrap 3+ Framework, HTML5 and CSS3, Media query.
-                    It has a huge collection of reusable UI components and integrated with.</p>
+                <p>Make those huge urls into small ones with our awesome shortening algorithm, we support up to 2,147,483,647</p>
             </div>
             <div class="col-lg-5 features-text">
-                <small>INSPINIA</small>
-                <h2>Perfectly designed </h2>
+                <h2>Blazing fast </h2>
                 <i class="fa fa-bolt big-icon pull-right"></i>
-                <p>INSPINIA Admin Theme is a premium admin dashboard template with flat design concept. It is fully
-                    responsive admin dashboard template built with Bootstrap 3+ Framework, HTML5 and CSS3, Media query.
-                    It has a huge collection of reusable UI components and integrated with.</p>
+                <p>With our Spring boot / Java backend we can warranty fast response times</p>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-5 col-lg-offset-1 features-text">
-                <small>INSPINIA</small>
-                <h2>Perfectly designed </h2>
-                <i class="fa fa-clock-o big-icon pull-right"></i>
-                <p>INSPINIA Admin Theme is a premium admin dashboard template with flat design concept. It is fully
-                    responsive admin dashboard template built with Bootstrap 3+ Framework, HTML5 and CSS3, Media query.
-                    It has a huge collection of reusable UI components and integrated with.</p>
+                <h2>Modern UI</h2>
+                <i class="fa fa-heart big-icon pull-right"></i>
+                <p>Base on Ractive.js "The diamond age of web development"</p>
             </div>
             <div class="col-lg-5 features-text">
-                <small>INSPINIA</small>
-                <h2>Perfectly designed </h2>
+                <h2>Share </h2>
                 <i class="fa fa-users big-icon pull-right"></i>
-                <p>INSPINIA Admin Theme is a premium admin dashboard template with flat design concept. It is fully
-                    responsive admin dashboard template built with Bootstrap 3+ Framework, HTML5 and CSS3, Media query.
-                    It has a huge collection of reusable UI components and integrated with.</p>
+                <p>Share the link and gatter all the information of the visitors</p>
             </div>
         </div>
     </div>
@@ -125,7 +119,7 @@
 </section>
 
 
-<section id="counter" class="navy-section" style="margin-top: 0">
+<section id="counter" class="navy-section">
 
     <div class="container">
         <div class="row">
@@ -136,7 +130,7 @@
 
 </section>
 
-<section id="contact" class="gray-section ">
+<section id="contact" class="gray-section " style="margin-top: 0px;">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -157,8 +151,7 @@
         </div>
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-center m-t-lg m-b-lg">
-                <p><strong>&copy; 2015 @blzb</strong><br/> consectetur adipisicing elit. Aut eaque, laboriosam
-                    veritatis, quos non quis ad perspiciatis, totam corporis ea, alias ut unde.</p>
+                <p><strong>&copy; 2015 @blzb</strong><br/></p>
             </div>
         </div>
     </div>
