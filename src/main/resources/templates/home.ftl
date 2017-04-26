@@ -156,7 +156,6 @@
         </div>
     </div>
 </section>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ractive/0.7.3/ractive.min.js"></script>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="js/pace.min.js"></script>
@@ -182,7 +181,7 @@
 <div class="vote-item  animated fadeInRight">
     <div class="row">
 
-        <div class="col-md-12">
+        <div class="col-md-10">
             <div class="vote-actions">
 
                 <div style="padding-top: 10px;">{{visits}}
@@ -202,6 +201,9 @@
                 <i class="fa fa-user"></i> <a href="#">{{createdBy}}</a>
             </div>
         </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-outline btn-primary" on-click='copyToClipboard'>Copy</button>
+        </div>
     </div>
 </div>
 
@@ -212,6 +214,12 @@
 
 <h1 class="page-title text-center">LET'S SHORTEN THAT LINK</h1>
 <br/>
+{{#if invalidUrl}}
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Warning!</strong> That url is not valid
+</div>
+{{/if}}
 <div class="input-group"><input placeholder="Type your url..." autofocus type="text" class="form-control input-lg"> <span
         class="input-group-btn"> <button on-click='newUrl' type="button" class="btn btn-primary btn-lg"
                                          style="height: 46px; padding-top: 6px; padding-bottom: 6px; padding-left: 30px; padding-right: 30px; font-size: 20px">Go!
