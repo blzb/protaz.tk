@@ -9,6 +9,32 @@ $(document).ready(function () {
             items: []
         }
     });
+    urlList.on({
+        copyToClipboard: function (event) {
+            console.log(event);
+            var item = this.get(event.keypath);
+            var text = item.shortUrl;
+            if (window.clipboardData && window.clipboardData.setData) {
+                // IE specific code path to prevent textarea being shown while dialog is visible.
+                return clipboardData.setData("Text", text);
+
+            } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+                var textarea = document.createElement("textarea");
+                textarea.textContent = text;
+                textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+                } catch (ex) {
+                    console.warn("Copy to clipboard failed.", ex);
+                    return false;
+                } finally {
+                    document.body.removeChild(textarea);
+                }
+            }
+        }
+    });
 
     var counter = new Ractive({
         el: '#counterDiv',
@@ -47,21 +73,31 @@ $(document).ready(function () {
 
     createUrl.on({
         newUrl: function (event) {
+            createUrl.set('invalidUrl', false);
             var node = this.el.querySelector(".input-lg");
             var urlValue = node.value.trim();
-            $.ajax({
-                url: "/api/shortUrls",
-                type: "POST",
-                data: JSON.stringify({url: urlValue}),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            })
-                .done(function (data) {
-                    urlList.unshift('items', data);
-                });
-            node.value = '';
+            if(!!urlValue) {
+                var urlRegex = '^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$';
+                var re=new RegExp(urlRegex);
+                if(re.test(urlValue)) {
+                    $.ajax({
+                        url: "/api/shortUrls",
+                        type: "POST",
+                        data: JSON.stringify({url: urlValue}),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json"
+                    })
+                        .done(function (data) {
+                            urlList.unshift('items', data);
+                        });
+                    node.value = '';
+                } else{
+                    createUrl.set('invalidUrl', true);
+                }
+            } else{
+                createUrl.set('invalidUrl', true);
+            }
         }
     });
-
 });
 
