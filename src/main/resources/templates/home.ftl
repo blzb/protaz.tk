@@ -178,8 +178,7 @@
 <script id="item" type="text/ractive">
 <div class="vote-item  animated fadeInRight">
     <div class="row">
-
-        <div class="col-md-10">
+<div class="col-md-1">
             <div class="vote-actions">
 
                 <div style="padding-top: 10px;">{{visits}}
@@ -188,6 +187,10 @@
                     <i class="fa fa-area-chart" style="font-size: 30px;"> </i>
                 </a>
             </div>
+
+</div>
+
+        <div class="col-md-9"  style="overflow-x: hidden">
             <a href="{{shortUrl}}" target="_blank" class="vote-title">
                 {{shortUrl}}
             </a>
