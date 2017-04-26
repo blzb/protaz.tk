@@ -119,42 +119,34 @@ $(document).ready(function () {
     createUrl.on({
         newUrl: function (event) {
             createUrl.set('invalidUrl', false);
-            createUrl.set('idUnavailable', false);
+            createUrl.set('errorMessage', false);
             var node = this.el.querySelector(".input-lg");
             var nodeCustom = this.el.querySelector("#customId");
             var customId = nodeCustom.value.trim();
 
             var urlValue = node.value.trim();
-            if (!!urlValue) {
-                var urlRegex = '^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$';
-                var re = new RegExp(urlRegex);
-                if (re.test(urlValue)) {
-                    var body = {url: urlValue};
-                    if (!!customId) {
-                        body.customStringId = customId;
-                    }
-                    $.ajax({
-                        url: "/api/shortUrls",
-                        type: "POST",
-                        data: JSON.stringify(body),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json"
-                    })
-                        .done(function (data) {
-                            urlList.unshift('items', data);
-                        })
-                        .error(function (data) {
-                            console.log(data);
-                            createUrl.set('idUnavailable', true);
-                    });
-                    node.value = '';
-                    nodeCustom.value = '';
-                } else {
-                    createUrl.set('invalidUrl', true);
-                }
-            } else {
-                createUrl.set('invalidUrl', true);
+            var body = {url: urlValue};
+            if (!!customId) {
+                body.customStringId = customId;
             }
+            $.ajax({
+                url: "/api/shortUrls",
+                type: "POST",
+                data: JSON.stringify(body),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            })
+                .done(function (data) {
+                    urlList.unshift('items', data);
+                })
+                .error(function (data) {
+                    console.log(data.responseText);
+                    var response = JSON.parse(data.responseText);
+
+                    createUrl.set('errorMessage', response.message);
+                });
+            node.value = '';
+            nodeCustom.value = '';
         },
         setCustom: function (event) {
             console.log(event.node);

@@ -221,10 +221,10 @@
   <strong>Warning!</strong> That url is not valid
 </div>
 {{/if}}
-{{#if idUnavailable}}
+{{#if errorMessage}}
 <div class="alert alert-warning alert-dismissible" role="error">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  We tried our best to accomodate your url, but it was already taken
+  {{errorMessage}}
 </div>
 {{/if}}
 <div class="input-group">
